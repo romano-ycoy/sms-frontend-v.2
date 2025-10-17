@@ -1,0 +1,1 @@
+export { mockStudents } from "./model/mockStudents";

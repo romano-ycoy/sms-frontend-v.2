@@ -1,0 +1,1 @@
+export { AddStudentButton } from './ui/AddStudentButton';
