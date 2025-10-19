@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Users, Menu, X, GraduationCap } from "lucide-react";
+import { CircleGauge, Users, Menu, X, GraduationCap } from "lucide-react";
 import { useState } from "react";
 
 export function Sidebar() {
@@ -7,7 +7,7 @@ export function Sidebar() {
     const [isMobileOpen, setIsMobileOpen] = useState(false);
 
     const links = [
-        { name: "Dashboard", path: "/app/dashboard", icon: LayoutDashboard },
+        { name: "Dashboard", path: "/app/dashboard", icon: CircleGauge },
         { name: "Students", path: "/app/students", icon: Users },
     ];
 
