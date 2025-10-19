@@ -1,83 +1,99 @@
-import { DashboardChart } from "@/widgets/dashboard-chart";
-import { Card, CardHeader, CardTitle, CardContent } from "@/shared/ui/card";
-import { mockStudents } from "@/entities/student/model/mockStudents";
-import { Users, User, UserPlus } from "lucide-react";
+import { useStudents } from "@/entities/student/model/StudentProvider";
+import { Card } from "@/shared/ui/card";
+import { Users, Venus, Mars, GraduationCap } from "lucide-react";
 
 export function DashboardPage() {
-    const totalStudents = mockStudents.length;
-    const totalMales = mockStudents.filter((s) => s.gender === "Male").length;
-    const totalFemales = mockStudents.filter((s) => s.gender === "Female").length;
+  const { students } = useStudents();
 
-    return (
-        <div className="p-6 space-y-6">
-            {/* Page Title */}
-            <h1 className="text-2xl font-bold mb-4">Dashboard Overview</h1>
+  // Totals
+  const totalStudents = students.length;
+  const enrolledStudents = students.length; // all enrolled for demo
 
-            <DashboardChart />
+  // Gender counts
+  const maleCount = students.filter(s => s.prefix === "Mr.").length;
+  const femaleCount = students.filter(
+    s => s.prefix === "Ms." || s.prefix === "Mrs."
+  ).length;
 
-            {/* Stats Section */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Total Students */}
-                <Card className="flex items-center gap-4 p-4 shadow-sm">
-                    <Users className="text-blue-500 w-8 h-8" />
-                    <div>
-                        <CardTitle>Total Students</CardTitle>
-                        <CardContent className="text-2xl font-semibold mt-1">
-                            {totalStudents}
-                        </CardContent>
-                    </div>
-                </Card>
+  // Recent registrations (sort by newest)
+  const recentRegistrations = [...students]
+    .sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate))
+    .slice(0, 5);
 
-                {/* Male Students */}
-                <Card className="flex items-center gap-4 p-4 shadow-sm">
-                    <User className="text-green-500 w-8 h-8" />
-                    <div>
-                        <CardTitle>Male Students</CardTitle>
-                        <CardContent className="text-2xl font-semibold mt-1">
-                            {totalMales}
-                        </CardContent>
-                    </div>
-                </Card>
+  return (
+    <div className="p-6 space-y-6">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
 
-                {/* Female Students */}
-                <Card className="flex items-center gap-4 p-4 shadow-sm">
-                    <UserPlus className="text-pink-500 w-8 h-8" />
-                    <div>
-                        <CardTitle>Female Students</CardTitle>
-                        <CardContent className="text-2xl font-semibold mt-1">
-                            {totalFemales}
-                        </CardContent>
-                    </div>
-                </Card>
-            </div>
+      {/* Summary cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Total Students */}
+        <Card className="flex flex-col gap-2 py-4 px-6">
+          <div className="flex items-center justify-between">
+            <p className="text-l font-normal text-muted-foreground">Total Students</p>
+            <Users className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <p className="text-5xl font-semibold">{totalStudents}</p>
+          <p className="text-xs text-muted-foreground">
+            Current total number of students.
+          </p>
+        </Card>
 
-            {/* Recent Enrollments */}
-            <div className="mt-8">
-                <h2 className="text-xl font-semibold mb-3">Recently Enrolled</h2>
-                <div className="border rounded-lg overflow-hidden">
-                    <table className="w-full text-left">
-                        <thead className="bg-muted">
-                            <tr>
-                                <th className="p-3">Name</th>
-                                <th className="p-3">Gender</th>
-                                <th className="p-3">Date Enrolled</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {mockStudents.slice(-5).map((student) => (
-                                <tr key={student.id} className="border-t hover:bg-accent">
-                                    <td className="p-3">
-                                        {student.prefix} {student.firstName} {student.lastName}
-                                    </td>
-                                    <td className="p-3">{student.gender}</td>
-                                    <td className="p-3">{student.dateEnrolled}</td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        {/* Enrolled Students */}
+        <Card className="flex flex-col gap-2 py-4 px-6">
+          <div className="flex items-center justify-between">
+            <p className="text-l font-normal text-muted-foreground">Enrolled Students</p>
+            <GraduationCap className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <p className="text-5xl font-semibold">{enrolledStudents}</p>
+          <p className="text-xs text-muted-foreground">
+            Current total number of enrolled students.
+          </p>
+        </Card>
 
+        {/* Male Students */}
+        <Card className="flex flex-col gap-2 py-4 px-6">
+          <div className="flex items-center justify-between">
+            <p className="text-l font-normal text-muted-foreground">Male Students</p>
+            <Mars className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <p className="text-5xl font-semibold">{maleCount}</p>
+          <p className="text-xs text-muted-foreground">
+            Current total number of male students.
+          </p>
+        </Card>
+
+        {/* Female Students */}
+        <Card className="flex flex-col gap-2 py-4 px-6">
+          <div className="flex items-center justify-between">
+            <p className="text-l font-normal text-muted-foreground">Female Students</p>
+            <Venus className="w-8 h-8 text-muted-foreground" />
+          </div>
+          <p className="text-5xl font-semibold">{femaleCount}</p>
+          <p className="text-xs text-muted-foreground">
+            Current total number of female students.
+          </p>
+        </Card>
+      </div>
+
+      {/* Recent registrations */}
+      <div className="mt-6">
+        <h2 className="text-xl font-semibold mb-2">Recent Registrations</h2>
+        <div className="space-y-2">
+          {recentRegistrations.map((student) => (
+            <Card key={student.id} className="flex justify-between p-3">
+              <div>
+                <p className="font-semibold">
+                  {student.prefix} {student.firstName} {student.lastName}
+                </p>
+                <p className="text-sm text-muted-foreground">{student.email}</p>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                {new Date(student.registrationDate).toLocaleDateString()}
+              </p>
+            </Card>
+          ))}
         </div>
-    );
+      </div>
+    </div>
+  );
 }
