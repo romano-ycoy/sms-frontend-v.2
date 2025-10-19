@@ -12,15 +12,17 @@ import { Badge } from "@/shared/ui/badge";
 
 export function StudentTable({ students, onEdit, onDelete }) {
     const formatDate = (dateString) => {
+        if (!dateString) return "—";
         const date = new Date(dateString);
-        return date.toLocaleDateString('en-US', {
-            month: 'short',
-            day: 'numeric',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+        return date.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
         });
     };
+
 
     if (students.length === 0) {
         return (
@@ -36,7 +38,8 @@ export function StudentTable({ students, onEdit, onDelete }) {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead>Name</TableHead>
+                            <TableHead>First Name</TableHead>
+                            <TableHead>Last Name</TableHead>
                             <TableHead className="hidden md:table-cell">Email</TableHead>
                             <TableHead className="hidden lg:table-cell">Mobile</TableHead>
                             <TableHead className="hidden xl:table-cell">Registered</TableHead>
@@ -51,12 +54,24 @@ export function StudentTable({ students, onEdit, onDelete }) {
                                 <TableCell className="font-medium">
                                     <div>
                                         <p className="font-semibold">
+                                            {student.firstName}
+                                        </p>
+                                        <p className="font-semibold text-ring">
                                             {student.prefix && `${student.prefix} `}
-                                            {student.firstName} {student.lastName}
                                         </p>
                                         {/* Show email on mobile */}
                                         <p className="text-sm text-muted-foreground md:hidden">
                                             {student.email}
+                                        </p>
+                                    </div>
+                                </TableCell>
+                                <TableCell className="font-medium">
+                                    <div>
+                                        <p className="font-semibold">
+                                            {student.lastName}
+                                        </p>
+                                        <p className="font-semibold text-ring">
+                                            {`ID: ${student.id}`}
                                         </p>
                                     </div>
                                 </TableCell>
