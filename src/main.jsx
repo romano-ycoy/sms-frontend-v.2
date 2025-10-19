@@ -3,13 +3,18 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import { ThemeProvider } from './app/providers/ThemeProvider'
 import { AppRouter } from './app/router/AppRouter'
+import { Toaster } from "@/shared/ui/sonner"
+import { StudentProvider } from './entities/student/model/StudentProvider'
 import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <ThemeProvider>
-        <AppRouter />
+        <StudentProvider>
+          <AppRouter />
+          <Toaster />
+        </StudentProvider>
       </ThemeProvider>
     </BrowserRouter>
   </React.StrictMode>,
