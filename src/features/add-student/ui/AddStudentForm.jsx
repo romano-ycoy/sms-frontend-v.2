@@ -1,0 +1,187 @@
+import { useState } from "react";
+import { useStudents } from "@/entities/student/model/StudentProvider";
+import { Button } from "@/shared/ui/button";
+import { Input } from "@/shared/ui/input";
+import { Label } from "@/shared/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/shared/ui/select";
+import { DialogFooter } from "@/shared/ui/dialog";
+import { toast } from "sonner";
+
+export function AddStudentForm({ onCancel }) {
+    const { addStudent } = useStudents();
+
+    const [prefix, setPrefix] = useState("");
+    const [customPrefix, setCustomPrefix] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [mobile, setMobile] = useState("");
+
+    const resetForm = () => {
+        setPrefix("");
+        setCustomPrefix("");
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setMobile("");
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        if (!firstName || !lastName || !email || !mobile || !prefix) {
+            toast.error("Missing Fields", {
+                description: "Please fill in all required fields.",
+            });
+            return;
+        }
+
+        if (prefix === "Other" && !customPrefix) {
+            toast.error("Custom Prefix Required", {
+                description: "Please enter a custom prefix.",
+            });
+            return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            toast.error("Invalid Email", {
+                description: "Please enter a valid email address.",
+            });
+            return;
+        }
+
+        const mobileRegex = /^09\d{9}$/;
+        if (!mobileRegex.test(mobile)) {
+            toast.error("Invalid Mobile Number", {
+                description: "Please enter a valid Philippine mobile number (09XXXXXXXXX).",
+            });
+            return;
+        }
+
+        const finalPrefix = prefix === "Other" ? customPrefix : prefix;
+
+        const newStudent = {
+            id: Date.now(),
+            prefix: finalPrefix,
+            firstName,
+            lastName,
+            email,
+            mobile,
+            registrationDate: new Date().toISOString(),
+        };
+
+        addStudent(newStudent);
+
+        toast.success("Student Added", {
+            description: `${newStudent.firstName} ${newStudent.lastName} has been successfully added.`,
+        });
+
+        resetForm();
+        onCancel();
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+            {/* Prefix Dropdown */}
+            <div className="space-y-2">
+                <Label htmlFor="prefix">
+                    Prefix <span className="text-destructive">*</span>
+                </Label>
+                <Select value={prefix} onValueChange={setPrefix}>
+                    <SelectTrigger id="prefix">
+                        <SelectValue placeholder="Select prefix" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem value="Mr.">Mr.</SelectItem>
+                        <SelectItem value="Ms.">Ms.</SelectItem>
+                        <SelectItem value="Mrs.">Mrs.</SelectItem>
+                        <SelectItem value="Dr.">Dr.</SelectItem>
+                        <SelectItem value="Prof.">Prof.</SelectItem>
+                        <SelectItem value="Other">Other</SelectItem>
+                    </SelectContent>
+                </Select>
+            </div>
+
+            {prefix === "Other" && (
+                <div className="space-y-2 animate-in slide-in-from-top-2">
+                    <Label htmlFor="customPrefix">
+                        Custom Prefix <span className="text-destructive">*</span>
+                    </Label>
+                    <Input
+                        id="customPrefix"
+                        value={customPrefix}
+                        onChange={(e) => setCustomPrefix(e.target.value)}
+                        placeholder="Enter custom prefix (e.g., Mx., Rev.)"
+                        autoFocus
+                    />
+                </div>
+            )}
+
+            <div className="space-y-2">
+                <Label htmlFor="firstName">
+                    First Name <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                    id="firstName"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    placeholder="Enter first name"
+                />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="lastName">
+                    Last Name <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                    id="lastName"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    placeholder="Enter last name"
+                />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="email">
+                    Email <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="student@example.com"
+                />
+            </div>
+
+            <div className="space-y-2">
+                <Label htmlFor="mobile">
+                    Mobile Number <span className="text-destructive">*</span>
+                </Label>
+                <Input
+                    id="mobile"
+                    type="tel"
+                    value={mobile}
+                    onChange={(e) => setMobile(e.target.value)}
+                    placeholder="Enter mobile number"
+                    maxLength="11"
+                />
+                <p className="text-xs text-muted-foreground">Format: 09XXXXXXXXX</p>
+            </div>
+
+            <DialogFooter className="gap-2 sm:gap-2">
+                <Button type="button" variant="outline" onClick={onCancel}>
+                    Cancel
+                </Button>
+                <Button type="submit">Add Student</Button>
+            </DialogFooter>
+        </form>
+    );
+}
