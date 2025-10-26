@@ -22,7 +22,7 @@ export function AddStudentDialog({ onAddStudent = () => { } }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button aria-label="Add new student">
+        <Button aria-label="Add new student" className="bg-emerald-500 hover:bg-emerald-600">
           <Plus className="w-4 h-4 mr-2" />
           <span className="hidden sm:inline">Add Student</span>
           <span className="sm:hidden">Add</span>
