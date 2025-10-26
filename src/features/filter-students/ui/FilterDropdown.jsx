@@ -1,4 +1,4 @@
-import { Filter, X } from "lucide-react";
+import { SlidersVertical, X } from "lucide-react";
 import { Button } from "@/shared/ui/button";
 import {
     DropdownMenu,
@@ -22,7 +22,7 @@ export function FilterDropdown({ filters, onFilterChange, onResetFilters }) {
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="relative">
-                        <Filter className="w-4 h-4 mr-2" />
+                        <SlidersVertical className="w-4 h-4 mr-2" />
                         Filters
                         {activeFilterCount > 0 && (
                             <Badge
