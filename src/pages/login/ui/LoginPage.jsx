@@ -1,6 +1,6 @@
 import loginImg from "@/shared/assets/students-studying.jpg";
 import logoImg from "../../../../public/graduation-cap.svg";
-import { LoginForm } from "./LoginForm";
+import { LoginForm } from "../../../features/auth/components/LoginForm";
 
 export function LoginPage() {
     return (
@@ -15,7 +15,7 @@ export function LoginPage() {
             </div>
 
             {/* Right side (form) */}
-            <div className="w-full lg:w-1/2 h-1/2 lg:h-full flex items-center justify-center bg-background relative">
+            <div className="w-full lg:w-1/2 h-full lg:h-full flex items-center justify-center bg-background relative">
                     <img
                         src={logoImg}
                         alt="EduTrack logo"
